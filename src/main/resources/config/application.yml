@@ -13,7 +13,7 @@
 
 spring:
   application:
-    name: ars-auth-service
+    name: auth-service
   profiles:
     active: "@profiles.active@"
   servlet:

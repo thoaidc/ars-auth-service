@@ -87,7 +87,96 @@ eureka:
 
 dct:
   base:
+    domain: http://localhost:${server.port}
+
+    features:
+      datasource: enabled
+      jpa-auditing: enabled
+      rest-template: disabled
+
+      resources: disabled
+      socket: disabled
+      i18n: enabled
+
+    i18n:
+      base-names:
+        - classpath:i18n/messages
+      encoding: UTF-8
+
+    socket:
+      endpoints:
+        - /ws
+      broker-prefixes:
+        - /topics
+      application-prefixes:
+        - /api/ws
+
+    resources:
+      static-resource:
+        patterns:
+          - /**.html
+          - /**.js
+          - /**.css
+          - /**.ico
+          - /uploads/**
+          - /file/**
+          - /i18n/**
+        locations:
+          - classpath:/static/
+          - classpath:/static/i18n/
+      upload-resource:
+        accept-formats:
+          - .png
+          - .jpg
+          - .jpeg
+          - .gif
+          - .svg
+          - .webp
+          - .webm
+        patterns:
+          - /uploads/
+        locations:
+          - ${UPLOAD_PATH}
+
+    interceptor:
+      excluded-patterns:
+        - /**.html
+        - /**.js
+        - /**.css
+        - /**.ico
+        - /uploads/**
+        - /file/**
+        - /login/**
+        - /error**
+        - /i18n/**
+      cors:
+        apply-for:
+          - /**
+        allowed-origin-patterns:
+          - "*"
+        allowed-headers:
+          - Content-Type
+          - Accept
+          - X-App-Version
+          - X-Device-ID
+        allowed-methods:
+          - GET
+          - PUT
+          - POST
+          - PATCH
+          - DELETE
+        allowed-credentials: true
+
     security:
+      enabled-tls: false
+      password-encrypt-factor: 12
+      public-request-patterns:
+        - /**.ico
+        - /p/**
+        - /api/p/**
+        - /api/v1/p/**
+        - /login/**
+
       jwt:
         enabled: true
         base64-secret-key: ${ARS_GATEWAY_SECURITY_KEY}
@@ -96,7 +185,20 @@ dct:
         refresh-token:
           validity: 3600000 # 1 hour
           validity-for-remember: 604800000 # 7 days
-    i18n:
-      base-names:
-        - classpath:i18n/messages
-      encoding: UTF-8
+
+      oauth2:
+        enabled: true
+        base-authorize-uri: /api/p/v1/oauth2/authorize # Add /{registrationId} (eg: /google) when calling from clients
+        clients:
+          - provider: google
+            client-name: Demo Starter Google
+            client-id: ${GOOGLE_CLIENT_ID}
+            client-secret: ${GOOGLE_CLIENT_SECRET}
+            scope:
+              - https://www.googleapis.com/auth/userinfo.email
+              - https://www.googleapis.com/auth/userinfo.profile
+            authorization-uri: https://accounts.google.com/o/oauth2/auth
+            redirect-uri: ${dct.base.domain}/login/oauth2/code/google
+            token-uri: https://oauth2.googleapis.com/token
+            user-info-uri: https://openidconnect.googleapis.com/v1/userinfo
+            username-attribute-name: sub
