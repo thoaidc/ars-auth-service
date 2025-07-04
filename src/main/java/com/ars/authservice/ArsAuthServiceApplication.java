@@ -1,13 +1,15 @@
 package com.ars.authservice;
 
-import com.dct.base.config.CRLFLogConverter;
+import com.dct.model.config.CRLFLogConverter;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.context.annotation.ComponentScan;
+import org.springframework.context.annotation.EnableAspectJAutoProxy;
 import org.springframework.core.env.Environment;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.util.StringUtils;
@@ -17,6 +19,8 @@ import java.net.UnknownHostException;
 import java.util.Optional;
 
 @SpringBootApplication
+@EnableAspectJAutoProxy
+@EnableDiscoveryClient
 @ComponentScan({"com.dct.base", "com.ars.authservice"})
 public class ArsAuthServiceApplication {
 

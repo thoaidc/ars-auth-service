@@ -33,3 +33,22 @@ server:
         # Cookies will still be sent with each HTTP request (and can therefore be used for session authentication)
         # But Cookies cannot be accessed from the client side using JavaScript (e.g. via document.cookie)
         http-only: true
+
+# Actuator endpoints
+management:
+  endpoints:
+    web:
+      exposure:
+        include:
+          - health
+          - info
+          - metrics
+  endpoint:
+    metrics:
+      enabled: true
+    prometheus:
+      enabled: true
+    health:
+      show-details: always
+  server:
+    port: 8888
