@@ -44,11 +44,5 @@ management:
           - info
           - metrics
   endpoint:
-    metrics:
-      enabled: true
-    prometheus:
-      enabled: true
     health:
       show-details: always
-  server:
-    port: 8888
